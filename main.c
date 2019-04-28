@@ -1,11 +1,15 @@
 #include <stdio.h>
+#include <string.h>
 
 int main()
 {
     char message[100], ch;
-	int i, key, a;
-	
-//select encryption method*********************************************************
+	int i, keyi, a, b, c;
+// ********************************************************** Cipher selection **************************************************
+	printf("Enter 1 for Caesar Cipher \n 2 for Simple Cipher \n");
+  scanf("%d", a);
+// ************************************************Encryption or Decrypt Caesar**************************************************
+	if (b==1){	
     printf("enter 1 for Caesar Cipher encryption\n 2 for Caesar Cipher decryption\n");
   scanf("%d", a);
   	
@@ -13,44 +17,44 @@ int main()
 	gets(message);
 	  
 	  printf("Enter key: ");
-	scanf("%d", &key);
+	scanf("%d", &keyi);
 	
-	//Encryption
+//***********************************************Encryption*********************************************************************	
 	if (a==1){
-	    	for(i = 0; message[i] != '\0'; ++i){
-		ch = message[i];
+	    	for(i = 0; message[i] != '\0'; ++i){//Initialises for loop that encrypts message
+		ch = message[i];//selects each character in message to be encrypted
 		
-		if(ch >= 'a' && ch <= 'z'){
-			ch = ch + key;
+		if(ch >= 'a' && ch <= 'z'){//ensures character is within a -> z
+			ch = ch + keyi;//increases character by key 
 			
 			if(ch > 'z'){
-				ch = ch - 'z' + 'a' - 1;
+				ch = ch - 'z' + 'a' - 1;//repeats increase by key for each letter
 			}
 			
-			message[i] = ch;
+			message[i] = ch;//saves encrypted message 
 		}
-		else if(ch >= 'A' && ch <= 'Z'){
-			ch = ch + key;
+		else if(ch >= 'A' && ch <= 'Z'){//ensures character is within A -> Z
+			ch = ch + keyi;//increases character by key 
 			
-			if(ch > 'Z'){
+			if(ch > 'Z'){//repeats increase by key for each letter
 				ch = ch - 'Z' + 'A' - 1;
 			}
 			
-			message[i] = ch;
+			message[i] = ch;//saves encrypted message
 		}
 	}
-printf("Encrypted message: %s", strupr(message));
+printf("Encrypted message: %s", strupr(message));//prints encrypted message in uppercase 
 }
 	
-	//Decryption
+//*****************************************************Decryption***************************************************************
 	else if (a==2){
 	  
-	
+//Does the same as encryption but subtracting the key
 	for(i = 0; message[i] != '\0'; ++i){
 		ch = message[i];
 		
 		if(ch >= 'a' && ch <= 'z'){
-			ch = ch - key;
+			ch = ch - keyi;
 			
 			if(ch < 'a'){
 				ch = ch + 'z' - 'a' + 1;
@@ -59,7 +63,7 @@ printf("Encrypted message: %s", strupr(message));
 			message[i] = ch;
 		}
 		else if(ch >= 'A' && ch <= 'Z'){
-			ch = ch - key;
+			ch = ch - keyi;
 			
 			if(ch < 'A'){
 				ch = ch + 'Z' - 'A' + 1;
@@ -68,72 +72,44 @@ printf("Encrypted message: %s", strupr(message));
 			message[i] = ch;
 		}
 	}
-	printf("Decrypted message: %s", strupr(message));
-}
+	printf("Decrypted message: %s", strupr(message));//Prints decrypted message in uppercase
+}}
+// ****************************************Encryption or Decrypt Simple cipher**************************************************
+	else if(b==2){
+	printf("Enter 1 for Simple Cipher Encryption\n 2 for Simple Cipher Decryption\n");
+  scanf("%d", c);
+// **************************************************Encryption Simple cipher**************************************************
+		if(c==1){
+	
+	char KEY[30];// creates string to store the key 
+   	printf("Enter key text:");
+   	fgets(KEY, sizeof(KEY), stdin);//key string length                   
+    
+    	char message[999];// creates string to store message
+   	printf("Enter text: ");
+    	fgets(message, sizeof(message), stdin);                 
+    	message[strlen(message) - 1] = 0;// remove the \n
+    	int count = strlen(message);//message string length
+
+    	char output[count];// output string
+    	for(int i = 0; i < count; i++) {// loop through characters in message
+        int index = ((int) message[i]) - 97;// get the index in the cipher by subtracting 'a' (97) from the current character
+        if(index < 0) {
+            output[i] = ' ';// if index < 0, put a space to account for spaces
+        }
+        else {
+            output[i] = KEY[index];// else, assign the output[i] to the KEY[index]
+        }
+    }
+    output[count] = 0;// terminate the string
+
+    printf("output: %s\n", output);// output
+		}
+// **************************************************Decrypt Simple cipher**************************************************
+		if(){
+		
+		}
+		
+	}
 	return 0;
 }
-
-/*
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-
-char shift_tbl_u[27] = "GHIJKLMNOPQRSTUVWXYZABCDEF"; 
-char shift_tbl_l[27] = "ghijklmnopqrstuvwxyzabcdef"; 
-char encrypt(char inchar)
-{
-        if(isalpha(inchar) && isupper(inchar))
-    {
-        return shift_tbl_u[inchar-'A'];
-    }
-    else if(isalpha(inchar) && islower(inchar)) 
-    {
-        return shift_tbl_l[inchar-'a'];
-    }
-    return inchar; // non alphabetic = no change;
-}
-
-
-int main (void)
-{
-    FILE *fp = fopen("code.txt", "rb+");
-    char *buffer = NULL;    
-
-
-    size_t s_file;
-    int i;
-
-    if(!fp)
-    {
-        puts("Could not open code.txt");
-        exit(EXIT_FAILURE);
-    }
-
-    fseek(fp, 0, SEEK_END);
-    s_file = ftell(fp);
-    rewind(fp);
-    buffer = malloc(s_file + 1);
-    if(!buffer)
-    {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-
-    fread(buffer, 1, s_file, fp);
-
-    fseek(fp, 0, SEEK_SET);
-
-    for(i = 0; i < s_file; i++)
-    {
-        char c = encrypt(buffer[i]);
-        fwrite(&c, 1, 1, fp);
-    }
-    free(buffer);
-    buffer = NULL;
-
-    fclose(fp);
-
-    return 0;
-}
-*\
