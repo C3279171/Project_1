@@ -103,7 +103,7 @@ printf("Encrypted message: %s", strupr(message));//prints encrypted message in u
     }
     output[count] = 0;// terminate the string
 
-    printf("output: %s\n", output);// output
+    printf("output: %s\n", strupr(output));// output in uppercase
 		}
 // **************************************************Decrypt Simple cipher**************************************************
 		if(){
